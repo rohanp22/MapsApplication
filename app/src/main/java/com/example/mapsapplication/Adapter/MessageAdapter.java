@@ -1,6 +1,7 @@
 package com.example.mapsapplication.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.mapsapplication.Model.Chat;
 import com.example.mapsapplication.Model.User;
-import com.example.mapsapplication.Model.UserFirebase;
 import com.example.mapsapplication.Others.SharedPrefManager;
 import com.example.mapsapplication.R;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
@@ -54,9 +57,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         Chat chat = mChat.get(position);
 
         holder.show_message.setText(chat.getMessage());
+        DateFormat simple = new SimpleDateFormat("hh:mm a");
+
+        // Creating date from milliseconds
+        // using Date() constructor
+        Date result = new Date(Long.parseLong(chat.getTime()));
+        holder.time.setText(simple.format(result));
 
         if (imageurl.equals("default")){
-            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
+            holder.profile_image.setImageResource(R.drawable.ic_baseline_account_circle_24);
         } else {
             Glide.with(mContext).load(imageurl).into(holder.profile_image);
         }
@@ -83,10 +92,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         public TextView show_message;
         public ImageView profile_image;
         public TextView txt_seen;
+        public TextView time;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
+            time = itemView.findViewById(R.id.time);
             show_message = itemView.findViewById(R.id.show_message);
             profile_image = itemView.findViewById(R.id.profile_image);
             txt_seen = itemView.findViewById(R.id.txt_seen);
@@ -96,7 +107,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public int getItemViewType(int position) {
         fuser = SharedPrefManager.getInstance(mContext).getUser();
-        if (mChat.get(position).getSender().equals(fuser.getId())){
+        Log.d("my id", fuser.getId()+"");
+
+        if (mChat.get(position).getSender().equals(fuser.getId()+"")){
+            Log.d("sender id", mChat.get(position).getSender());
             return MSG_TYPE_RIGHT;
         } else {
             return MSG_TYPE_LEFT;

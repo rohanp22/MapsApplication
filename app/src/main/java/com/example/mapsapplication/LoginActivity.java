@@ -34,11 +34,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (SharedPrefManager.getInstance(this).isLoggedIn()) {
-            finish();
-            startActivity(new Intent(this, MainActivity.class));
-        }
         setContentView(R.layout.activity_login);
 
         //progressBar = (ProgressBar) findViewById(R.id.progressBar);

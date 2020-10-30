@@ -12,7 +12,7 @@ public interface APIService {
     @Headers(
             {
                     "Content-Type:application/json",
-                    "Authorization:key=ADD HERE YOUR KEY FROM FIREBASE PROJECT"
+                    "Authorization:key=AAAARnwSw_0:APA91bEpSYoGffkdT0vJFuXZg5Q7Z-gSxsZ8mSvhP_M0LbtRok4ldy7i-xe8HQduAA8RAGQJ6SDUS-yCxDqPfkobxAgDmL5MZTam7ZgT5i5bEHIFG8V7FR62VfMEKXaoXUAfv18GDH0d"
             }
     )
 

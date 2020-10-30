@@ -11,23 +11,44 @@
         android:id="@+id/profile_image"
         android:src="@mipmap/ic_launcher"/>
 
-    <TextView
+    <LinearLayout
+        android:id="@+id/linear"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_toRightOf="@id/profile_image"
         android:layout_marginLeft="5dp"
-        android:text="hello"
-        android:textColor="#000"
-        android:id="@+id/show_message"
-        android:textSize="18sp"
         android:padding="8dp"
-        android:background="@drawable/background_left"/>
+        android:orientation="vertical"
+        android:background="@drawable/background_left"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="hello"
+            android:textColor="#000"
+            android:id="@+id/show_message"
+            android:textSize="18sp"
+            android:gravity="bottom"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/time"
+            android:layout_marginLeft="4dp"
+            android:textSize="10dp"
+            android:layout_gravity="bottom|right"
+            android:layout_toRightOf="@id/show_message"
+            android:text="12:00"
+            android:layout_alignBottom="@id/show_message"
+            />
+
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/txt_seen"
         android:visibility="gone"
-        android:layout_below="@id/show_message"/>
+        android:layout_below="@id/linear"/>
 
 </RelativeLayout>

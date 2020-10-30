@@ -1,7 +1,8 @@
-package com.example.mapsapplication.ui.notifications;
+package com.example.mapsapplication.ui.chat;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,6 +18,7 @@ import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -37,6 +39,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.example.mapsapplication.Model.Token;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class ChatFragment extends Fragment {
@@ -93,6 +96,7 @@ public class ChatFragment extends Fragment {
 
         reference = FirebaseDatabase.getInstance().getReference("Chatlist").child(SharedPrefManager.getInstance(getContext()).getUser().getId() + "");
         reference.addValueEventListener(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 usersList.clear();
@@ -100,7 +104,7 @@ public class ChatFragment extends Fragment {
                     ChatList chatlist = snapshot.getValue(ChatList.class);
                     usersList.add(chatlist);
                 }
-
+                usersList.sort(new sortTime());
                 chatList();
             }
 
@@ -111,27 +115,37 @@ public class ChatFragment extends Fragment {
         });
 
         updateToken(FirebaseInstanceId.getInstance().getToken());
-
-
         return view;
+    }
+
+    class sortTime implements Comparator<ChatList> {
+        public int compare(ChatList a, ChatList b) {
+            long a1 = 0, b1 = 0;
+            a1 = Long.parseLong(a.getTime());
+            b1 = Long.parseLong(b.getTime());
+
+            return (int)(b1 - a1);
+        }
     }
 
     private void filter(String text) {
         //new array list that will hold the filtered data
         ArrayList<UserFirebase> filterdNames = new ArrayList<>();
 
-        //looping through existing elements
-        for (UserFirebase s : mUsers) {
-            //if the existing elements contains the search input
-            if (s.getSearch().toLowerCase().contains(text.toLowerCase())) {
-                Log.d("Names", s.getSearch());
-                //adding the element to filtered list
-                filterdNames.add(s);
+        if(!text.equals("")) {
+            //looping through existing elements
+            for (UserFirebase s : mUsers) {
+                //if the existing elements contains the search input
+                if (s.getSearch().toLowerCase().contains(text.toLowerCase())) {
+                    Log.d("Names", s.getSearch());
+                    //adding the element to filtered list
+                    filterdNames.add(s);
+                }
             }
-        }
 
-        //calling a method of the adapter class and passing the filtered list
-        userAdapter.filterList(filterdNames);
+            //calling a method of the adapter class and passing the filtered list
+            userAdapter.filterList(filterdNames);
+        }
     }
 
     @Override
@@ -164,6 +178,7 @@ public class ChatFragment extends Fragment {
     private void chatList() {
         mUsers = new ArrayList<UserFirebase>();
         reference = FirebaseDatabase.getInstance().getReference("Users");
+
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -176,14 +191,26 @@ public class ChatFragment extends Fragment {
                         }
                     }
                 }
-                userAdapter = new UserAdapter(getContext(), mUsers, true);
-                recyclerView.setAdapter(userAdapter);
-            }
+                ArrayList<UserFirebase> userFirebases2 = copyOrder();
+                userAdapter = new UserAdapter(getContext(), userFirebases2, true);
+                recyclerView.setAdapter(userAdapter); }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
+    }
+
+    public ArrayList<UserFirebase> copyOrder(){
+        ArrayList<UserFirebase> users2 = new ArrayList<>();
+        for(int i = 0; i < usersList.size(); i++){
+            for(int j = 0; j < mUsers.size(); j++){
+                if(usersList.get(i).getId().equals(mUsers.get(j).getId())){
+                    users2.add(mUsers.get(j));
+                }
+            }
+        }
+        return users2;
     }
 }

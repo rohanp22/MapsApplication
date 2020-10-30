@@ -22,6 +22,7 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
                 android:layout_width="30dp"
+                android:onClick="gotoprofile"
                 android:layout_height="30dp" />
 
             <TextView
@@ -30,6 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"
                 android:layout_marginLeft="25dp"
+                android:onClick="gotoprofile"
                 android:textColor="#fff"
                 android:textSize="18sp"
                 android:textStyle="bold" />

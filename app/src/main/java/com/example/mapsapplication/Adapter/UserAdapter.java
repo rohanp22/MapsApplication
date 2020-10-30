@@ -1,6 +1,9 @@
 package com.example.mapsapplication.Adapter;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -48,17 +52,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
         final UserFirebase user = mUsers.get(position);
         holder.username.setText(user.getUsername());
         if (user.getImageURL().equals("default")){
-            holder.profile_image.setImageResource(R.mipmap.ic_launcher);
+            holder.profile_image.setImageResource(R.drawable.ic_baseline_account_circle_24);
         } else {
             Glide.with(mContext).load(user.getImageURL()).into(holder.profile_image);
         }
 
         if (ischat){
-            lastMessage(user.getId(), holder.last_msg);
+            lastMessage(user.getId(), holder.last_msg, holder.unread_count, holder);
         } else {
             holder.last_msg.setVisibility(View.GONE);
         }
@@ -104,6 +107,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         private ImageView img_on;
         private ImageView img_off;
         private TextView last_msg;
+        private TextView unread_count;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -113,24 +117,41 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             img_on = itemView.findViewById(R.id.img_on);
             img_off = itemView.findViewById(R.id.img_off);
             last_msg = itemView.findViewById(R.id.last_msg);
+            unread_count = itemView.findViewById(R.id.unread_count);
         }
     }
 
     //check for last message
-    private void lastMessage(final String userid, final TextView last_msg){
+    private void lastMessage(final String userid, final TextView last_msg, final TextView unread_count, final ViewHolder holder){
         theLastMessage = "default";
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Chats");
         final User firebaseUser = SharedPrefManager.getInstance(mContext).getUser();
 
-        reference.addValueEventListener(new ValueEventListener() {
+        Query query = FirebaseDatabase.getInstance().getReference("Chats").child(firebaseUser.getId()+"").orderByChild("time");
+
+        Log.d("Sender", firebaseUser.getId()+"");
+        Log.d("Reciever", userid+"");
+
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Chat chat = snapshot.getValue(Chat.class);
                     if (firebaseUser != null && chat != null) {
-                        if (chat.getReceiver().equals(firebaseUser.getId()) && chat.getSender().equals(userid) ||
-                                chat.getReceiver().equals(userid) && chat.getSender().equals(firebaseUser.getId())) {
-                            theLastMessage = chat.getMessage();
+                        if (chat.getReceiver().equals(firebaseUser.getId()+"") && chat.getSender().equals(userid) ||
+                                chat.getReceiver().equals(userid) && chat.getSender().equals(firebaseUser.getId()+"")) {
+
+                            Log.d("time", chat.getTime() +": "+ chat.getMessage());
+                            if(chat.getSender().equals(firebaseUser.getId()+"")) {
+                                theLastMessage = "You: "+chat.getMessage();
+                            } else {
+                                if(!chat.isIsseen()){
+                                    last_msg.setTypeface(null, Typeface.BOLD);
+                                    last_msg.setTextColor(Color.BLACK);
+                                    unread_count.setVisibility(View.VISIBLE);
+                                }
+                                theLastMessage = chat.getMessage();
+                            }
                         }
                     }
                 }
@@ -153,5 +174,55 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
             }
         });
+
+//        reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+//                    Chat chat = snapshot.getValue(Chat.class);
+//                    if (firebaseUser != null && chat != null) {
+//                        if (chat.getReceiver().equals(firebaseUser.getId()+"") && chat.getSender().equals(userid) ||
+//                                chat.getReceiver().equals(userid) && chat.getSender().equals(firebaseUser.getId()+"")) {
+//                            if(chat.getSender().equals(firebaseUser.getId()+"")) {
+//                                theLastMessage = "You: "+chat.getMessage();
+//                            } else {
+//                                if(!chat.isIsseen()){
+//                                    last_msg.setTypeface(null, Typeface.BOLD);
+//                                    last_msg.setTextColor(Color.BLACK);
+//                                    unread_count.setVisibility(View.VISIBLE);
+//                                }
+//                                theLastMessage = chat.getMessage();
+//                            }
+//                        }
+//                    }
+//                }
+//
+//                switch (theLastMessage){
+//                    case  "default":
+//                        last_msg.setText("No Message");
+//                        break;
+//
+//                    default:
+//                        last_msg.setText(theLastMessage);
+//                        break;
+//                }
+//
+//                theLastMessage = "default";
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+    }
+
+    public void swapItems(int a, int b) {
+        UserFirebase itemA = mUsers.get(a);
+        UserFirebase itemB = mUsers.get(b);
+        mUsers.set(a, itemB);
+        mUsers.set(b, itemA);
+
+        notifyDataSetChanged(); //This will trigger onBindViewHolder method from the adapter.
     }
 }

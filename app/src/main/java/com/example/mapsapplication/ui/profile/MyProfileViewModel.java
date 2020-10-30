@@ -1,16 +1,16 @@
-package com.example.mapsapplication.ui.notifications;
+package com.example.mapsapplication.ui.profile;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class ChatViewModel extends ViewModel {
+public class MyProfileViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public ChatViewModel() {
+    public MyProfileViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is notifications fragment");
+        mText.setValue("This is Profile fragment");
     }
 
     public LiveData<String> getText() {

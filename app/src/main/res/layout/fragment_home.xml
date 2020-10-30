@@ -4,19 +4,106 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.MyProfileFragment">
+    tools:context=".ui.profile.MyProfileFragment">
 
-    <TextView
-        android:id="@+id/text_home"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/myProfileImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_baseline_account_circle_24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="32dp"
+        android:id="@+id/editImage"
+        android:layout_height="32dp"
+        android:background="@drawable/round_unread"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="@id/myProfileImage"
+        app:layout_constraintBottom_toBottomOf="@id/myProfileImage"
+        android:layout_marginLeft="-5dp"
+        android:src="@drawable/ic_baseline_edit_24"
+        android:layout_marginTop="-5dp"
+        />
+
+    <TextView
+        android:id="@+id/upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginRight="10dp"
+        app:layout_constraintTop_toTopOf="@id/myProfileImage"
+        app:layout_constraintBottom_toBottomOf="@id/myProfileImage"
+        />
+
+    <TextView
+        android:id="@+id/myProfileName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="4dp"
+        android:textColor="#000"
+        android:textSize="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/myProfileImage"
+        app:layout_constraintStart_toEndOf="@id/myProfileImage"
+        app:layout_constraintTop_toTopOf="@id/myProfileImage" />
+
+    <TextView
+        android:id="@+id/phonenoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Mobile : "
+        app:layout_constraintStart_toStartOf="@id/myProfileImage"
+        app:layout_constraintTop_toBottomOf="@id/myProfileImage" />
+
+    <TextView
+        android:id="@+id/myProfilephone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="@id/phonenoText"
+        app:layout_constraintStart_toEndOf="@id/phonenoText"
+        app:layout_constraintTop_toTopOf="@+id/phonenoText" />
+
+    <TextView
+        android:id="@+id/emailText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="E-mail : "
+        app:layout_constraintStart_toStartOf="@id/myProfileImage"
+        app:layout_constraintTop_toBottomOf="@id/myProfilephone" />
+
+    <TextView
+        android:id="@+id/myProfileEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000"
+        android:textSize="16dp"
+        app:layout_constraintBottom_toBottomOf="@id/emailText"
+        app:layout_constraintStart_toEndOf="@id/emailText"
+        app:layout_constraintTop_toTopOf="@id/emailText" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tablayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/myProfileEmail" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="?actionBarSize"
+        app:layout_constraintTop_toBottomOf="@+id/tablayout"
+        android:nestedScrollingEnabled="true" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -41,7 +41,7 @@ import org.json.JSONObject;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ProfileFragment extends Fragment {
+public class Profile2 extends Fragment {
 
     LinearLayout chatNow;
     LinearLayout addFriend;
@@ -70,6 +70,7 @@ public class ProfileFragment extends Fragment {
         context = root.getContext();
         fstatus = root.findViewById(R.id.fstatus);
         addFriend = root.findViewById(R.id.addFriend);
+        addFriend.setVisibility(View.GONE);
         image = root.findViewById(R.id.image);
         chatNow = root.findViewById(R.id.chatNow);
         profileName = root.findViewById(R.id.myProfileName);

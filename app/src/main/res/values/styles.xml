@@ -15,4 +15,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="BlackText" parent="TextDefault">
+        <item name="android:textColor">#000</item>
+    </style>
+
+    <style name="TextDefault">Default</style>
+
+
 </resources>

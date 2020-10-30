@@ -1,16 +1,16 @@
-package com.example.mapsapplication.ui.home;
+package com.example.mapsapplication.ui.maps;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class MyProfileViewModel extends ViewModel {
+public class MapsViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public MyProfileViewModel() {
+    public MapsViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is Profile fragment");
+        mText.setValue("This is dashboard fragment");
     }
 
     public LiveData<String> getText() {
